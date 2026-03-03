@@ -2,3 +2,4 @@ Django>=4.0
 mysqlclient
 django-environ
 Pillow>=10.0
+whitenoise>=6.5.0
