@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container" style="margin-top: 40px; margin-bottom: 60px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="font-weight: 800; color: var(--text-main);">Booking Requests</h2>
+        <a href="{% url 'vendor_dashboard' %}" class="btn btn-outline-secondary" style="border-radius: 8px;">Back to
+            Dashboard</a>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="dashboard-card" style="padding: 20px; border-radius: 12px;">
+        {% if bookings %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr style="color: var(--text-muted); font-size: 14px;">
+                        <th>Customer</th>
+                        <th>Event Info</th>
+                        <th>Date & Time</th>
+                        <th>Location</th>
+                        <th>Guests</th>
+                        <th>Est. Price</th>
+                        <th>Status</th>
+                        <th>Update Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td style="font-weight: 600; color: var(--text-main);">
+                            {{ booking.customer.full_name }}<br>
+                            <small class="text-muted" style="font-weight: 400;"><i class="fas fa-phone-alt"></i> {{                                 booking.customer.phone_number }}</small>
+                        </td>
+                        <td>
+                            {{ booking.event_type }}
+                            {% if booking.special_requirements %}
+                            <br><small class="text-muted"><i class="fas fa-info-circle text-primary"
+                                    title="{{ booking.special_requirements }}"></i> Notes attached</small>
+                            {% endif %}
+                        </td>
+                        <td>{{ booking.event_date }} <br><small class="text-muted">{{ booking.event_time }}</small></td>
+                        <td style="font-size: 13px;">{{ booking.event_location|truncatechars:20 }}</td>
+                        <td>{{ booking.number_of_guests }}</td>
+                        <td style="font-weight: 700; color: var(--secondary);">₹{{ booking.estimated_price }}</td>
+                        <td>
+                            {% if booking.status == 'Pending' %}
+                            <span class="badge bg-warning text-dark px-2 py-1"
+                                style="border-radius: 20px; font-size: 11px;">Pending</span>
+                            {% elif booking.status == 'Accepted' %}
+                            <span class="badge bg-success px-2 py-1"
+                                style="border-radius: 20px; font-size: 11px;">Accepted</span>
+                            {% elif booking.status == 'Rejected' %}
+                            <span class="badge bg-danger px-2 py-1"
+                                style="border-radius: 20px; font-size: 11px;">Rejected</span>
+                            {% elif booking.status == 'Completed' %}
+                            <span class="badge bg-primary px-2 py-1"
+                                style="border-radius: 20px; font-size: 11px;">Completed</span>
+                            {% elif booking.status == 'Cancelled' %}
+                            <span class="badge bg-secondary px-2 py-1"
+                                style="border-radius: 20px; font-size: 11px;">Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if booking.status == 'Pending' %}
+                            <form method="post" action="{% url 'update_booking_status' booking.id %}"
+                                class="d-flex gap-2">
+                                {% csrf_token %}
+                                <button type="submit" name="status" value="Accepted" class="btn btn-sm btn-success"
+                                    style="border-radius: 6px;"><i class="fas fa-check"></i></button>
+                                <button type="submit" name="status" value="Rejected" class="btn btn-sm btn-danger"
+                                    style="border-radius: 6px;" onclick="return confirm('Reject this booking?');"><i
+                                        class="fas fa-times"></i></button>
+                            </form>
+                            {% elif booking.status == 'Accepted' %}
+                            <form method="post" action="{% url 'update_booking_status' booking.id %}">
+                                {% csrf_token %}
+                                <button type="submit" name="status" value="Completed"
+                                    class="btn btn-sm btn-outline-primary" style="border-radius: 6px;"
+                                    onclick="return confirm('Mark as Completed?');">Mark Complete</button>
+                            </form>
+                            {% else %}
+                            <span class="text-muted" style="font-size: 12px;">Archived</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <h4 class="text-muted mb-3"><i class="fas fa-inbox" style="font-size: 3rem; color: #ddd;"></i></h4>
+            <p style="color: var(--text-muted);">You have no booking requests at the moment.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

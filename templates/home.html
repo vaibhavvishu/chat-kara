@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Find the Perfect Caterer for Your Event</h1>
+            <p class="hero-subtitle">Discover top-rated caterers and book them instantly for your special day.</p>
+
+            <form class="search-container" action="#" method="GET">
+                <div class="search-field">
+                    <label>Location</label>
+                    <select name="location">
+                        <option value="">Select Location</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="bangalore">Bangalore</option>
+                        <option value="pune">Pune</option>
+                    </select>
+                </div>
+
+                <div class="search-field">
+                    <label>Event Type</label>
+                    <select name="event_type">
+                        <option value="">Event Type</option>
+                        <option value="wedding">Wedding</option>
+                        <option value="corporate">Corporate</option>
+                        <option value="birthday">Birthday</option>
+                        <option value="party">Small Party</option>
+                    </select>
+                </div>
+
+                <div class="search-field">
+                    <label>Budget Range</label>
+                    <input type="number" name="budget" placeholder="e.g. 50000">
+                </div>
+
+                <button type="submit" class="btn btn-gradient btn-search">Search Now</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="features container" style="padding: 100px 0;">
+    <div style="text-align: center; margin-bottom: 60px;">
+        <h2>Why Choose Chatkara Connect?</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+        <div class="dashboard-card" style="text-align: left;">
+            <i class="fas fa-check-circle" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
+            <h3>Verified Vendors</h3>
+            <p>Every caterer on our platform is thoroughly vetted to ensure quality and hygiene.</p>
+        </div>
+        <div class="dashboard-card" style="text-align: left;">
+            <i class="fas fa-magic" style="font-size: 40px; color: var(--secondary); margin-bottom: 20px;"></i>
+            <h3>Personalized Menus</h3>
+            <p>Customize your catering menu according to your taste and budget preferences.</p>
+        </div>
+        <div class="dashboard-card" style="text-align: left;">
+            <i class="fas fa-shield-alt" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
+            <h3>Secure Booking</h3>
+            <p>Pay securely and track your booking status directly from your dashboard.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

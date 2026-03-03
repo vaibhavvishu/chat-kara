@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container" style="margin-top: 40px; margin-bottom: 60px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="dashboard-card" style="padding: 40px; border-radius: 16px;">
+                <h2 style="font-weight: 800; color: var(--text-main); margin-bottom: 10px;">Book Caterer</h2>
+                <p style="color: var(--text-muted); margin-bottom: 30px;">
+                    Requesting catering from <strong style="color: var(--primary);">{{ vendor.business_name }}</strong>
+                    <br><small>Starting at ₹{{ vendor.starting_price_per_plate }}/plate</small>
+                </p>
+
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <form method="post" action="{% url 'create_booking' vendor.id %}">
+                    {% csrf_token %}
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-weight: 600; color: var(--text-muted);">Event Type
+                                *</label>
+                            {{ form.event_type }}
+                            {% if form.event_type.errors %}
+                            <div class="text-danger mt-1" style="font-size: 13px;">{{ form.event_type.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-weight: 600; color: var(--text-muted);">Event Location
+                                *</label>
+                            {{ form.event_location }}
+                            {% if form.event_location.errors %}
+                            <div class="text-danger mt-1" style="font-size: 13px;">{{ form.event_location.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-weight: 600; color: var(--text-muted);">Event Date
+                                *</label>
+                            {{ form.event_date }}
+                            {% if form.event_date.errors %}
+                            <div class="text-danger mt-1" style="font-size: 13px;">{{ form.event_date.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-weight: 600; color: var(--text-muted);">Event Time
+                                *</label>
+                            {{ form.event_time }}
+                            {% if form.event_time.errors %}
+                            <div class="text-danger mt-1" style="font-size: 13px;">{{ form.event_time.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" style="font-weight: 600; color: var(--text-muted);">Number of Guests
+                            *</label>
+                        {{ form.number_of_guests }}
+                        <small class="text-muted d-block mt-1">Estimated Cost acts as ₹{{                             vendor.starting_price_per_plate }} x Guests. Final quote comes from vendor.</small>
+                        {% if form.number_of_guests.errors %}
+                        <div class="text-danger mt-1" style="font-size: 13px;">{{ form.number_of_guests.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label" style="font-weight: 600; color: var(--text-muted);">Special
+                            Requirements (Optional)</label>
+                        {{ form.special_requirements }}
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-gradient btn-lg"
+                            style="border-radius: 8px; font-weight: 700;">Submit Booking Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

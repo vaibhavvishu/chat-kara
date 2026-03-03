@@ -1,0 +1,33 @@
+<nav class="navbar">
+    <div class="container navbar-container">
+        <a href="{% url 'home' %}" class="navbar-brand">
+            <span class="brand-text">Chatkara</span><span class="brand-subtext">Connect</span>
+        </a>
+
+        <button class="navbar-toggler" id="navbar-toggler">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="navbar-links" id="navbar-links">
+            <a href="{% url 'home' %}" class="nav-link">Home</a>
+            <a href="{% url 'caterer_list' %}" class="nav-link">Browse Caterers</a>
+            <a href="{% url 'about' %}" class="nav-link">About</a>
+            <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+
+            <div class="nav-auth-links">
+                {% if user.is_authenticated %}
+                <span class="nav-user-greeting" style="font-weight: 600; color: var(--primary);">Hi, {{                     user.full_name|truncatechars:15 }}</span>
+                {% if user.role == 'Vendor' %}
+                <a href="{% url 'vendor_dashboard' %}" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a>
+                {% elif user.role == 'Customer' %}
+                <a href="{% url 'customer_dashboard' %}" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="btn btn-gradient">Logout</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="nav-link">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-gradient">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

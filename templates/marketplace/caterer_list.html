@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="caterer-list-header"
+    style="background: linear-gradient(135deg, #1A1A1A, #2c1a40); padding: 60px 0; color: white;">
+    <div class="container text-center">
+        <h1 style="font-weight: 800; font-size: 3rem; margin-bottom: 15px;">Find Your Perfect Caterer</h1>
+        <p style="opacity: 0.8; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+            Browse the best catering services in your area. Use the filters below to find the perfect match for your
+            budget and taste.
+        </p>
+    </div>
+</div>
+
+<div class="container" style="margin-top: 40px; margin-bottom: 60px;">
+    <div class="row">
+        <!-- Filter Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="dashboard-card" style="padding: 25px; position: sticky; top: 20px;">
+                <h4 style="font-weight: 700; margin-bottom: 20px; color: var(--text-main);">Filters</h4>
+                <form method="get" action="{% url 'caterer_list' %}">
+
+                    <!-- Search -->
+                    <div class="mb-3">
+                        <label class="form-label text-muted" style="font-size: 14px; font-weight: 600;">Search</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background: none; border-right: none;"><i
+                                    class="fas fa-search text-muted"></i></span>
+                            <input type="text" name="search" class="form-control" placeholder="Business name..."
+                                value="{{ request_GET.search }}" style="border-left: none;">
+                        </div>
+                    </div>
+
+                    <!-- City Filter -->
+                    <div class="mb-3">
+                        <label class="form-label text-muted" style="font-size: 14px; font-weight: 600;">City</label>
+                        <select name="city" class="form-select">
+                            <option value="">All Cities</option>
+                            {% for city in cities %}
+                            <option value="{{ city }}" {% if request_GET.city == city %}selected{% endif %}>{{ city }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Max Budget Filter -->
+                    <div class="mb-3">
+                        <label class="form-label text-muted" style="font-size: 14px; font-weight: 600;">Max Budget
+                            (₹/plate)</label>
+                        <input type="number" name="budget" class="form-control" placeholder="e.g. 1000"
+                            value="{{ request_GET.budget }}">
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="mb-4">
+                        <label class="form-label text-muted" style="font-size: 14px; font-weight: 600;">Category</label>
+                        <select name="category" class="form-select">
+                            <option value="">All Categories</option>
+                            {% for cat in categories_filter %}
+                            <option value="{{ cat.id }}" {% if request_GET.category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Sort -->
+                    <div class="mb-4 pt-3 border-top">
+                        <label class="form-label text-muted" style="font-size: 14px; font-weight: 600;">Sort By</label>
+                        <select name="sort" class="form-select">
+                            <option value="newest" {% if request_GET.sort == 'newest' %}selected{% endif %}>Newest
+                            </option>
+                            <option value="price_asc" {% if request_GET.sort == 'price_asc' %}selected{% endif %}>Price:
+                                Low to High</option>
+                            <option value="price_desc" {% if request_GET.sort == 'price_desc' %}selected{% endif %}>Price:
+                                High to Low</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-gradient text-white"
+                            style="border-radius: 8px; font-weight: 600;">Apply Filters</button>
+                        <a href="{% url 'caterer_list' %}" class="btn btn-outline-secondary"
+                            style="border-radius: 8px;">Clear</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Vendor Grid -->
+        <div class="col-lg-9">
+            <div class="row">
+                {% for vendor in page_obj %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="caterer-card"
+                        style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; height: 100%; display: flex; flex-direction: column;">
+
+                        <!-- Cover Image Wrapper -->
+                        <div style="height: 160px; position: relative; background: #eee;">
+                            {% if vendor.cover_image %}
+                            <img src="{{ vendor.cover_image.url }}" alt="{{ vendor.business_name }}"
+                                style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                            <div
+                                style="width: 100%; height: 100%; background: linear-gradient(45deg, var(--secondary), var(--primary)); opacity: 0.8;">
+                            </div>
+                            {% endif %}
+                            <div
+                                style="position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.9); padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #28a745; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <i class="fas fa-check-circle"></i> Verified
+                            </div>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div
+                            style="padding: 20px; position: relative; flex-grow: 1; display: flex; flex-direction: column;">
+                            <!-- Profile Image -->
+                            <div
+                                style="width: 60px; height: 60px; border-radius: 50%; border: 3px solid white; overflow: hidden; position: absolute; top: -30px; left: 20px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                {% if vendor.profile_image %}
+                                <img src="{{ vendor.profile_image.url }}" alt="Profile"
+                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                {% else %}
+                                <div
+                                    style="width: 100%; height: 100%; background: var(--bg-light); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--text-muted);">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div style="margin-top: 35px;">
+                                <h4
+                                    style="font-weight: 700; font-size: 1.25rem; margin-bottom: 5px; color: var(--text-main);">
+                                    {{ vendor.business_name }}</h4>
+                                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;">
+                                    <i class="fas fa-map-marker-alt text-danger"></i> {{ vendor.service_area }}
+                                </p>
+
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div style="background: #f8f9fa; padding: 5px 10px; border-radius: 8px;">
+                                        <span
+                                            style="font-size: 12px; color: var(--text-muted); display: block;">Starting
+                                            around</span>
+                                        <span style="font-weight: 700; color: var(--secondary); font-size: 15px;">₹{{                                             vendor.starting_price_per_plate }} <small
+                                                class="text-muted">/plate</small></span>
+                                    </div>
+                                    <div style="color: #FFD700; font-size: 13px;">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                        <span
+                                            style="color: var(--text-muted); display: block; text-align: right; font-size: 11px;">(4.8)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-auto pt-3 border-top">
+                                <a href="{% url 'caterer_detail' vendor.id vendor.business_name|slugify %}"
+                                    class="btn btn-outline-primary w-100"
+                                    style="border-radius: 8px; font-weight: 600; border-color: var(--secondary); color: var(--secondary);">View
+                                    Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <div style="color: var(--text-muted); font-size: 48px; margin-bottom: 20px;"><i
+                            class="fas fa-search"></i></div>
+                    <h3>No Caterers Found</h3>
+                    <p class="text-muted">Try adjusting your filters or search terms to find more options.</p>
+                    <a href="{% url 'caterer_list' %}" class="btn btn-gradient mt-3">Reset Search</a>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?{% for key, value in request_GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}"
+                            style="color: var(--secondary); border-radius: 8px 0 0 8px;">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active" aria-current="page"><span class="page-link"
+                            style="background-color: var(--secondary); border-color: var(--secondary);">{{ num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link"
+                            href="?{% for key, value in request_GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}"
+                            style="color: var(--secondary);">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?{% for key, value in request_GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}"
+                            style="color: var(--secondary); border-radius: 0 8px 8px 0;">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .caterer-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .caterer-card .btn-outline-primary:hover {
+        background: var(--secondary);
+        color: white !important;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="form-section">
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>Join Chatkara Connect</h2>
+                <p>Register as a Customer or Vendor</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <p style="color: red; font-size: 12px;">{{ field.errors|striptags }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-gradient" style="width: 100%; margin-top: 20px;">Create
+                    Account</button>
+            </form>
+
+            <div class="form-footer">
+                <p>Already have an account? <a href="{% url 'login' %}"
+                        style="color: var(--primary); font-weight: 600;">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
