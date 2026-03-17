@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .payment-container {
+        max-width: 700px;
+        margin: 40px auto 60px;
+        padding: 0 20px;
+    }
+
+    .payment-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(106, 27, 154, 0.10);
+        overflow: hidden;
+    }
+
+    .payment-header {
+        background: linear-gradient(135deg, #6A1B9A, #8E24AA, #AB47BC);
+        padding: 32px 36px;
+        color: white;
+        position: relative;
+    }
+
+    .payment-header::after {
+        content: '';
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        right: 0;
+        height: 40px;
+        background: #fff;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .payment-header h2 {
+        margin: 0 0 6px;
+        font-weight: 700;
+        font-size: 24px;
+    }
+
+    .payment-header p {
+        margin: 0;
+        opacity: 0.85;
+        font-size: 14px;
+    }
+
+    .secure-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.18);
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        margin-top: 12px;
+        backdrop-filter: blur(5px);
+    }
+
+    .payment-body {
+        padding: 36px;
+    }
+
+    .summary-section {
+        margin-bottom: 28px;
+    }
+
+    .summary-section h4 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #9e9e9e;
+        margin-bottom: 16px;
+        font-weight: 600;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 15px;
+    }
+
+    .summary-row:last-child {
+        border-bottom: none;
+    }
+
+    .summary-row .label {
+        color: #757575;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .summary-row .label i {
+        color: #8E24AA;
+        width: 18px;
+        text-align: center;
+    }
+
+    .summary-row .value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .total-row {
+        background: linear-gradient(135deg, #f3e5f5, #e8eaf6);
+        margin: 0 -36px;
+        padding: 20px 36px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .total-row .label {
+        font-size: 16px;
+        font-weight: 700;
+        color: #4A148C;
+    }
+
+    .total-row .value {
+        font-size: 28px;
+        font-weight: 800;
+        color: #6A1B9A;
+    }
+
+    .payment-methods {
+        margin: 24px 0;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .method-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        background: #f5f5f5;
+        color: #555;
+        border: 1px solid #e0e0e0;
+    }
+
+    .method-badge i {
+        color: #8E24AA;
+    }
+
+    .pay-btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 24px;
+        letter-spacing: 0.5px;
+    }
+
+    .pay-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(106, 27, 154, 0.35);
+        background: linear-gradient(135deg, #7B1FA2, #9C27B0);
+    }
+
+    .pay-btn:active {
+        transform: translateY(0);
+    }
+
+    .pay-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .trust-badges {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .trust-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #9e9e9e;
+    }
+
+    .trust-badge i {
+        color: #66BB6A;
+    }
+
+    @media (max-width: 600px) {
+        .payment-body {
+            padding: 24px 20px;
+        }
+
+        .total-row {
+            margin: 0 -20px;
+            padding: 16px 20px;
+        }
+
+        .total-row .value {
+            font-size: 22px;
+        }
+
+        .payment-header {
+            padding: 24px 20px;
+        }
+
+        .payment-methods {
+            gap: 8px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="payment-container">
+    <div class="payment-card">
+        <div class="payment-header">
+            <h2><i class="fas fa-credit-card"></i> Payment</h2>
+            <p>Complete your booking with {{ booking.vendor.business_name }}</p>
+            <div class="secure-badge">
+                <i class="fas fa-lock"></i> Secured by Stripe
+            </div>
+        </div>
+
+        <div class="payment-body">
+            <div class="summary-section">
+                <h4>Booking Summary</h4>
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-store"></i> Vendor</span>
+                    <span class="value">{{ booking.vendor.business_name }}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-calendar-alt"></i> Event Date</span>
+                    <span class="value">{{ booking.event_date }}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-clock"></i> Event Time</span>
+                    <span class="value">{{ booking.event_time }}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-tag"></i> Event Type</span>
+                    <span class="value">{{ booking.event_type }}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-users"></i> Number of Guests</span>
+                    <span class="value">{{ booking.number_of_guests }}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-utensils"></i> Price Per Plate</span>
+                    <span class="value">₹{{ booking.vendor.starting_price_per_plate }}</span>
+                </div>
+            </div>
+
+            <div class="total-row">
+                <span class="label"><i class="fas fa-receipt"></i> Total Amount</span>
+                <span class="value">₹{{ booking.estimated_price }}</span>
+            </div>
+
+            <div class="summary-section" style="margin-top: 24px;">
+                <h4>Accepted Payment Methods</h4>
+                <div class="payment-methods">
+                    <span class="method-badge"><i class="fas fa-mobile-alt"></i> UPI</span>
+                    <span class="method-badge"><i class="far fa-credit-card"></i> Credit / Debit Card</span>
+                    <span class="method-badge"><i class="fas fa-wallet"></i> Wallets</span>
+                </div>
+            </div>
+
+            <form method="post" action="{% url 'create_checkout_session' booking.id %}" id="payment-form">
+                {% csrf_token %}
+                <button type="submit" class="pay-btn" id="pay-btn">
+                    <i class="fas fa-lock"></i> Pay Now — ₹{{ booking.estimated_price }}
+                </button>
+            </form>
+
+            <div class="trust-badges">
+                <span class="trust-badge"><i class="fas fa-shield-alt"></i> 256-bit SSL</span>
+                <span class="trust-badge"><i class="fas fa-check-circle"></i> PCI Compliant</span>
+                <span class="trust-badge"><i class="fas fa-undo"></i> Refund Policy</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Disable button on form submit to prevent double clicks
+    document.getElementById('payment-form').addEventListener('submit', function() {
+        var btn = document.getElementById('pay-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    });
+</script>
+{% endblock %}

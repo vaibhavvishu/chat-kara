@@ -1,4 +1,7 @@
 from __future__ import absolute_import, unicode_literals
-import pymysql
+try:
+    import pymysql
+    pymysql.install_as_MySQLdb()
+except ImportError:
+    pass
 
-pymysql.install_as_MySQLdb()

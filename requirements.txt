@@ -4,3 +4,4 @@ PyMySQL
 django-environ
 Pillow>=10.0
 whitenoise>=6.5.0
+stripe>=7.0.0

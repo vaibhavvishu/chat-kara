@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .success-container {
+        max-width: 600px;
+        margin: 60px auto;
+        padding: 0 20px;
+        text-align: center;
+    }
+
+    .success-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(106, 27, 154, 0.10);
+        padding: 48px 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .success-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(135deg, #66BB6A, #43A047);
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #66BB6A, #43A047);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    .success-icon i {
+        color: white;
+        font-size: 36px;
+    }
+
+    @keyframes scaleIn {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-card h2 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .success-card .subtitle {
+        color: #757575;
+        font-size: 15px;
+        margin-bottom: 32px;
+    }
+
+    .payment-details {
+        background: #f9fbe7;
+        border-radius: 12px;
+        padding: 20px 24px;
+        text-align: left;
+        margin-bottom: 28px;
+    }
+
+    .payment-details .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 14px;
+    }
+
+    .payment-details .detail-row .label {
+        color: #757575;
+    }
+
+    .payment-details .detail-row .value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .payment-details .amount-row {
+        border-top: 2px solid #dcedc8;
+        margin-top: 8px;
+        padding-top: 12px;
+    }
+
+    .payment-details .amount-row .value {
+        color: #2E7D32;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .success-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .success-actions .btn-primary-custom {
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .success-actions .btn-primary-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(106, 27, 154, 0.3);
+    }
+
+    .success-actions .btn-outline-custom {
+        padding: 12px 28px;
+        background: transparent;
+        color: #6A1B9A;
+        border: 2px solid #6A1B9A;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .success-actions .btn-outline-custom:hover {
+        background: #f3e5f5;
+    }
+
+    @media (max-width: 500px) {
+        .success-card {
+            padding: 36px 24px;
+        }
+
+        .success-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <div class="success-card">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <h2>Payment Successful!</h2>
+        <p class="subtitle">Your booking has been confirmed and payment is complete.</p>
+
+        {% if booking %}
+        <div class="payment-details">
+            <div class="detail-row">
+                <span class="label">Booking ID</span>
+                <span class="value">#{{ booking.id }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Vendor</span>
+                <span class="value">{{ booking.vendor.business_name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Event Date</span>
+                <span class="value">{{ booking.event_date }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Status</span>
+                <span class="value" style="color: #2E7D32;">✅ Confirmed</span>
+            </div>
+            {% if payment %}
+            <div class="detail-row amount-row">
+                <span class="label">Amount Paid</span>
+                <span class="value">₹{{ payment.amount }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="success-actions">
+            <a href="{% url 'customer_booking_history' %}" class="btn-primary-custom">
+                <i class="fas fa-list"></i> My Bookings
+            </a>
+            <a href="{% url 'customer_payments' %}" class="btn-outline-custom">
+                <i class="fas fa-receipt"></i> Payment History
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

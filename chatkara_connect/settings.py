@@ -144,3 +144,8 @@ MESSAGE_TAGS = {
 
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'home'
+
+# Stripe Payment Gateway Configuration
+STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY', default='')
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY', default='')
+STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET', default='')

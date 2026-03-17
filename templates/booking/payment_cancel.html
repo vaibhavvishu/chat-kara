@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .cancel-container {
+        max-width: 550px;
+        margin: 60px auto;
+        padding: 0 20px;
+        text-align: center;
+    }
+
+    .cancel-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        padding: 48px 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cancel-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(135deg, #ef5350, #e53935);
+    }
+
+    .cancel-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #ef5350, #e53935);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+    }
+
+    .cancel-icon i {
+        color: white;
+        font-size: 36px;
+    }
+
+    .cancel-card h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .cancel-card .subtitle {
+        color: #757575;
+        font-size: 15px;
+        margin-bottom: 32px;
+        line-height: 1.5;
+    }
+
+    .cancel-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cancel-actions .btn-retry {
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .cancel-actions .btn-retry:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(106, 27, 154, 0.3);
+    }
+
+    .cancel-actions .btn-back {
+        padding: 12px 28px;
+        background: transparent;
+        color: #757575;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .cancel-actions .btn-back:hover {
+        background: #f5f5f5;
+        border-color: #bdbdbd;
+    }
+
+    @media (max-width: 500px) {
+        .cancel-card {
+            padding: 36px 24px;
+        }
+
+        .cancel-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="cancel-container">
+    <div class="cancel-card">
+        <div class="cancel-icon">
+            <i class="fas fa-times"></i>
+        </div>
+
+        <h2>Payment Cancelled</h2>
+        <p class="subtitle">
+            Your payment was not completed. Don't worry — no charges were made.
+            {% if booking %}
+            <br>You can retry the payment for your booking with <strong>{{ booking.vendor.business_name }}</strong>.
+            {% endif %}
+        </p>
+
+        <div class="cancel-actions">
+            {% if booking %}
+            <a href="{% url 'payment_page' booking.id %}" class="btn-retry">
+                <i class="fas fa-redo"></i> Retry Payment
+            </a>
+            {% endif %}
+            <a href="{% url 'customer_booking_history' %}" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Bookings
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

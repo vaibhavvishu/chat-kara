@@ -14,6 +14,8 @@ class Booking(models.Model):
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
         ('Accepted', 'Accepted'),
+        ('Pending Payment', 'Pending Payment'),
+        ('Confirmed', 'Confirmed'),
         ('Rejected', 'Rejected'),
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),

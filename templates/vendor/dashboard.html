@@ -47,9 +47,14 @@
             <div style="font-size: 12px; color: var(--primary);">Available</div>
         </div>
         <div class="dashboard-card" style="padding: 25px;">
-            <p style="color: var(--text-muted); font-size: 14px;">Earnings (₹)</p>
-            <h2 style="font-size: 32px; font-weight: 700;">₹45.2K</h2>
-            <div style="font-size: 12px; color: #28a745;"><i class="fas fa-arrow-up"></i> 8% this month</div>
+            <p style="color: var(--text-muted); font-size: 14px;">Total Earnings</p>
+            <h2 style="font-size: 32px; font-weight: 700;">₹{{ total_earnings }}</h2>
+            <div style="font-size: 12px; color: #28a745;"><i class="fas fa-arrow-up"></i> From paid bookings</div>
+        </div>
+        <div class="dashboard-card" style="padding: 25px;">
+            <p style="color: var(--text-muted); font-size: 14px;">Paid Bookings</p>
+            <h2 style="font-size: 32px; font-weight: 700;">{{ paid_bookings_count }}</h2>
+            <div style="font-size: 12px; color: #28a745;"><i class="fas fa-check-circle"></i> Confirmed</div>
         </div>
         <div class="dashboard-card" style="padding: 25px;">
             <p style="color: var(--text-muted); font-size: 14px;">Rating</p>
@@ -68,41 +73,38 @@
     <div class="footer-grid" style="grid-template-columns: 3fr 1fr; gap: 30px; align-items: start;">
         <div class="dashboard-card" style="text-align: left; padding: 30px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h3 style="margin: 0;">Recent Booking Requests</h3>
-                <a href="#" style="font-size: 14px; color: var(--primary);">View All</a>
+                <h3 style="margin: 0;">Recent Payments</h3>
+                <a href="{% url 'vendor_booking_requests' %}" style="font-size: 14px; color: var(--primary);">View All Bookings</a>
             </div>
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; text-align: left;">
                     <thead style="background: var(--bg-light);">
                         <tr>
                             <th style="padding: 15px; font-size: 14px;">Customer</th>
-                            <th style="padding: 15px; font-size: 14px;">Event Type</th>
-                            <th style="padding: 15px; font-size: 14px;">Date</th>
+                            <th style="padding: 15px; font-size: 14px;">Event</th>
+                            <th style="padding: 15px; font-size: 14px;">Amount</th>
                             <th style="padding: 15px; font-size: 14px;">Status</th>
-                            <th style="padding: 15px; font-size: 14px;">Action</th>
+                            <th style="padding: 15px; font-size: 14px;">Date</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for payment in recent_payments %}
                         <tr style="border-bottom: 1px solid #eee;">
-                            <td style="padding: 15px; font-weight: 600;">Rahul Sharma</td>
-                            <td style="padding: 15px;">Wedding Reception</td>
-                            <td style="padding: 15px;">Mar 15, 2024</td>
-                            <td style="padding: 15px;"><span
-                                    style="color: #f39c12; font-size: 12px; font-weight: 700; background: #fff8e1; padding: 4px 8px; border-radius: 4px;">PENDING</span>
+                            <td style="padding: 15px; font-weight: 600;">{{ payment.customer.full_name }}</td>
+                            <td style="padding: 15px;">{{ payment.booking.event_type }}</td>
+                            <td style="padding: 15px; font-weight: 700; color: var(--secondary);">₹{{ payment.amount }}</td>
+                            <td style="padding: 15px;">
+                                <span style="color: #27ae60; font-size: 12px; font-weight: 700; background: #e8f5e9; padding: 4px 8px; border-radius: 4px;">PAID</span>
                             </td>
-                            <td style="padding: 15px;"><a href="#"
-                                    style="color: var(--primary); font-size: 12px; font-weight: 600;">Details</a></td>
+                            <td style="padding: 15px;">{{ payment.created_at|date:"M d, Y" }}</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid #eee;">
-                            <td style="padding: 15px; font-weight: 600;">Sneha Kapoor</td>
-                            <td style="padding: 15px;">Corporate Lunch</td>
-                            <td style="padding: 15px;">Mar 22, 2024</td>
-                            <td style="padding: 15px;"><span
-                                    style="color: #27ae60; font-size: 12px; font-weight: 700; background: #e8f5e9; padding: 4px 8px; border-radius: 4px;">CONFIRMED</span>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="padding: 30px; text-align: center; color: var(--text-muted);">
+                                No payments received yet.
                             </td>
-                            <td style="padding: 15px;"><a href="#"
-                                    style="color: var(--primary); font-size: 12px; font-weight: 600;">Details</a></td>
                         </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

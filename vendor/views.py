@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from accounts.decorators import role_required
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, Count
 from .models import VendorProfile, MenuCategory, MenuItem
 from .forms import VendorProfileForm, MenuCategoryForm, MenuItemForm
 from booking.models import Booking
+from booking.payment_models import Payment
 
 @login_required
 @role_required(allowed_roles=['Vendor'])
@@ -14,10 +16,27 @@ def dashboard(request):
         menu_items_count = profile.menu_items.count()
         categories_count = profile.categories.count()
         bookings_count = Booking.objects.filter(vendor=profile).count()
+
+        # Calculate real earnings from completed payments
+        vendor_payments = Payment.objects.filter(
+            booking__vendor=profile,
+            payment_status='Completed'
+        )
+        total_earnings = vendor_payments.aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+        paid_bookings_count = vendor_payments.values('booking').distinct().count()
+        recent_payments = vendor_payments.select_related(
+            'booking', 'customer'
+        ).order_by('-created_at')[:5]
+
     except VendorProfile.DoesNotExist:
         menu_items_count = 0
         categories_count = 0
         bookings_count = 0
+        total_earnings = 0
+        paid_bookings_count = 0
+        recent_payments = []
         messages.warning(request, "Please create your vendor profile first.")
         return redirect('vendor_profile')
         
@@ -25,6 +44,9 @@ def dashboard(request):
         'menu_items_count': menu_items_count,
         'categories_count': categories_count,
         'bookings_count': bookings_count,
+        'total_earnings': total_earnings,
+        'paid_bookings_count': paid_bookings_count,
+        'recent_payments': recent_payments,
         'profile': profile,
     }
     return render(request, 'vendor/dashboard.html', context)
