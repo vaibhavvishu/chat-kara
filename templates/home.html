@@ -8,10 +8,10 @@
             <h1>Find the Perfect Caterer for Your Event</h1>
             <p class="hero-subtitle">Discover top-rated caterers and book them instantly for your special day.</p>
 
-            <form class="search-container" action="#" method="GET">
+            <form class="search-container" action="{% url 'caterer_list' %}" method="GET">
                 <div class="search-field">
                     <label>Location</label>
-                    <select name="location">
+                    <select name="city">
                         <option value="">Select Location</option>
                         <option value="delhi">Delhi</option>
                         <option value="mumbai">Mumbai</option>

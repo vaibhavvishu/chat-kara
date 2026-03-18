@@ -1,8 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q, Avg
 from django.utils.text import slugify
-from vendor.models import VendorProfile, MenuCategory, MenuItem
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from vendor.models import VendorProfile, MenuCategory, MenuItem, Review
+from .forms import ReviewForm
 
 def caterer_list(request):
     # Base query for verified vendors
@@ -24,6 +27,13 @@ def caterer_list(request):
     category_id = request.GET.get('category')
     if category_id:
         vendors = vendors.filter(categories__id=category_id).distinct()
+
+    event_type = request.GET.get('event_type')
+    if event_type:
+        vendors = vendors.filter(
+            Q(business_description__icontains=event_type) |
+            Q(categories__name__icontains=event_type)
+        ).distinct()
 
     # Sorting
     sort_by = request.GET.get('sort')
@@ -66,8 +76,35 @@ def caterer_detail(request, id, slug):
     )
     categories = vendor.categories.prefetch_related(available_items_prefetch).all()
     
+    # Reviews
+    reviews = vendor.reviews.all()
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+    form = ReviewForm()
+
     context = {
         'vendor': vendor,
         'categories': categories,
+        'reviews': reviews,
+        'avg_rating': round(avg_rating, 1),
+        'review_form': form,
     }
     return render(request, 'marketplace/caterer_detail.html', context)
+
+@login_required
+def submit_review(request, vendor_id):
+    vendor = get_object_or_404(VendorProfile, id=vendor_id)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            # Check if user already reviewed
+            if Review.objects.filter(vendor=vendor, customer=request.user).exists():
+                messages.error(request, 'You have already reviewed this caterer.')
+            else:
+                review = form.save(commit=False)
+                review.vendor = vendor
+                review.customer = request.user
+                review.save()
+                messages.success(request, 'Your review has been posted successfully.')
+        else:
+            messages.error(request, 'Failed to submit review. Make sure all fields are valid.')
+    return redirect('caterer_detail', id=vendor.id, slug=slugify(vendor.business_name))

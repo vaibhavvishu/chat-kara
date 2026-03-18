@@ -31,54 +31,40 @@
         </div>
         <div class="dashboard-card" style="padding: 30px;">
             <i class="fas fa-star" style="font-size: 30px; color: #FFD700; margin-bottom: 15px;"></i>
-            <h2 style="font-size: 36px; font-weight: 700;">8</h2>
+            <h2 style="font-size: 36px; font-weight: 700;">{{ reviews_count }}</h2>
             <p style="color: var(--text-muted); font-weight: 500;">Reviews Given</p>
         </div>
     </div>
 
     <div class="footer-grid" style="grid-template-columns: 2fr 1fr; gap: 30px; align-items: start;">
-        <!-- Recent Activity -->
+        <!-- Recent Activity / Reviews -->
         <div class="dashboard-card" style="text-align: left; padding: 30px;">
-            <h3 style="margin-bottom: 25px; border-bottom: 2px solid var(--bg-light); padding-bottom: 15px;">Recent
-                Activity</h3>
+            <h3 style="margin-bottom: 25px; border-bottom: 2px solid var(--bg-light); padding-bottom: 15px;">Your Reviews</h3>
             <div class="activity-list">
-                <div class="activity-item"
-                    style="padding: 15px 0; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 15px;">
-                    <div
-                        style="width: 45px; height: 45px; background: #eef1ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary);">
-                        <i class="fas fa-check"></i>
+                {% for review in user_reviews %}
+                <div class="activity-item" style="padding: 15px 0; border-bottom: 1px solid #eee; display: flex; align-items: start; gap: 15px;">
+                    <div style="width: 45px; height: 45px; background: #e0fafb; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary); flex-shrink: 0;">
+                        <i class="fas fa-star"></i>
                     </div>
                     <div>
-                        <p style="font-weight: 600; margin: 0;">Booking Confirmed</p>
-                        <p style="font-size: 14px; color: var(--text-muted); margin: 0;">Royal Catering for Birthday
-                            Party</p>
-                    </div>
-                    <span style="margin-left: auto; font-size: 12px; color: #aaa;">2 days ago</span>
-                </div>
-                <div class="activity-item"
-                    style="padding: 15px 0; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 15px;">
-                    <div
-                        style="width: 45px; height: 45px; background: #e0fafb; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary);">
-                        <i class="fas fa-comment"></i>
-                    </div>
-                    <div>
-                        <p style="font-weight: 600; margin: 0;">Review Posted</p>
-                        <p style="font-size: 14px; color: var(--text-muted); margin: 0;">5 stars for Spice Garden</p>
-                    </div>
-                    <span style="margin-left: auto; font-size: 12px; color: #aaa;">1 week ago</span>
-                </div>
-                <div class="activity-item" style="padding: 15px 0; display: flex; align-items: center; gap: 15px;">
-                    <div
-                        style="width: 45px; height: 45px; background: #fff8e1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffca28;">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div>
-                        <p style="font-weight: 600; margin: 0;">New Search</p>
-                        <p style="font-size: 14px; color: var(--text-muted); margin: 0;">Caterers in Mumbai for Wedding
+                        <p style="font-weight: 600; margin: 0;">{{ review.vendor.business_name }} 
+                            <span style="color: #FFD700; font-size: 12px; margin-left: 5px;">
+                                {% for i in "12345"|make_list %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
                         </p>
+                        <p style="font-size: 14px; color: var(--text-muted); margin: 5px 0 0 0;">{{ review.comment }}</p>
                     </div>
-                    <span style="margin-left: auto; font-size: 12px; color: #aaa;">Mar 1, 2024</span>
+                    <span style="margin-left: auto; font-size: 12px; color: #aaa; white-space: nowrap;">{{ review.created_at|date:"M d, Y" }}</span>
                 </div>
+                {% empty %}
+                <p style="text-align: center; color: var(--text-muted); font-style: italic; font-size: 14px; padding: 20px;">You haven't written any reviews yet.</p>
+                {% endfor %}
             </div>
         </div>
 

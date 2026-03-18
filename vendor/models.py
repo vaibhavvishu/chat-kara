@@ -47,3 +47,16 @@ class MenuItem(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.vendor.business_name}"
+
+class Review(models.Model):
+    vendor = models.ForeignKey(VendorProfile, on_delete=models.CASCADE, related_name='reviews')
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews_given')
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.rating} Stars by {self.customer.full_name} for {self.vendor.business_name}"
