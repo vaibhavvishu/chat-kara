@@ -22,7 +22,13 @@ def caterer_list(request):
 
     budget = request.GET.get('budget')
     if budget:
-        vendors = vendors.filter(starting_price_per_plate__lte=budget)
+        try:
+            budget_val = float(budget)
+            min_budget = max(0, budget_val - 100)
+            max_budget = budget_val + 100
+            vendors = vendors.filter(starting_price_per_plate__gte=min_budget, starting_price_per_plate__lte=max_budget)
+        except ValueError:
+            pass
         
     category_id = request.GET.get('category')
     if category_id:

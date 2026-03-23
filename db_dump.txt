@@ -1,0 +1,10 @@
+Royal Feast Catering | Mumbai | 850.00 | True
+Final Catering | Mumbai | 500.00 | False
+Silicon Royal Events | Silicon City | 1500.00 | True
+Vijay Nagar Flavors | Vijay Nagar | 600.00 | True
+Indori Taste Makers | Silicon City | 800.00 | True
+Corporate Bites Vijay Nagar | Vijay Nagar | 400.00 | True
+Royal Vijay Nagar | Vijay Nagar | 1000.00 | True
+Executive Palasia | Palasia | 500.00 | True
+FunTime Bhawarkuan | Bhawarkuan | 300.00 | True
+Intimate Rau | Rau | 400.00 | True

@@ -16,6 +16,23 @@
     <div class="row">
         <!-- Vendor Grid -->
         <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid #eee;">
+                <h5 style="margin: 0; font-weight: 700;">{{ page_obj.paginator.count }} Caterers Found</h5>
+                <form action="{% url 'caterer_list' %}" method="GET" class="d-flex align-items-center">
+                    {% for key, value in request_GET.items %}
+                        {% if key != 'sort' %}
+                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endif %}
+                    {% endfor %}
+                    <label class="me-2 text-muted" style="font-size: 14px; white-space: nowrap;">Sort By</label>
+                    <select name="sort" class="form-select form-select-sm" style="border-radius: 8px; width: 150px;" onchange="this.form.submit()">
+                        <option value="newest" {% if request_GET.sort == 'newest' %}selected{% endif %}>Newest First</option>
+                        <option value="price_asc" {% if request_GET.sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_desc" {% if request_GET.sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                    </select>
+                </form>
+            </div>
+
             <div class="row">
                 {% for vendor in page_obj %}
                 <div class="col-md-6 col-lg-4 mb-4">
@@ -57,28 +74,25 @@
 
                             <div style="margin-top: 35px;">
                                 <h4
-                                    style="font-weight: 700; font-size: 1.25rem; margin-bottom: 5px; color: var(--text-main);">
+                                    style="font-weight: 700; font-size: 1.25rem; margin-bottom: 5px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     {{ vendor.business_name }}</h4>
-                                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;">
+                                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     <i class="fas fa-map-marker-alt text-danger"></i> {{ vendor.service_area }}
                                 </p>
 
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div style="background: #f8f9fa; padding: 5px 10px; border-radius: 8px;">
-                                        <span
-                                            style="font-size: 12px; color: var(--text-muted); display: block;">Starting
-                                            around</span>
-                                        <span style="font-weight: 700; color: var(--secondary); font-size: 15px;">₹{{                                             vendor.starting_price_per_plate }} <small
-                                                class="text-muted">/plate</small></span>
+                                        <span style="font-size: 12px; color: var(--text-muted); display: block;">Starting around</span>
+                                        <span style="font-weight: 700; color: var(--secondary); font-size: 15px;">₹{{ vendor.starting_price_per_plate }} <small class="text-muted">/plate</small></span>
                                     </div>
-                                    <div style="color: #FFD700; font-size: 13px;">
+                                    <div style="color: #FFD700; font-size: 13px; text-align: right;">
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star-half-alt"></i>
                                         <span
-                                            style="color: var(--text-muted); display: block; text-align: right; font-size: 11px;">(4.8)</span>
+                                            style="color: var(--text-muted); display: block; font-size: 11px;">(4.8)</span>
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +100,7 @@
                             <div class="mt-auto pt-3 border-top">
                                 <a href="{% url 'caterer_detail' vendor.id vendor.business_name|slugify %}"
                                     class="btn btn-outline-primary w-100"
-                                    style="border-radius: 8px; font-weight: 600; border-color: var(--secondary); color: var(--secondary);">View
+                                    style="border-radius: 8px; font-weight: 600; border-color: var(--secondary); color: var(--secondary); transition: all 0.3s ease;">View
                                     Details</a>
                             </div>
                         </div>
@@ -97,15 +111,15 @@
                     <div style="color: var(--text-muted); font-size: 48px; margin-bottom: 20px;"><i
                             class="fas fa-search"></i></div>
                     <h3>No Caterers Found</h3>
-                    <p class="text-muted">Try adjusting your filters or search terms to find more options.</p>
-                    <a href="{% url 'caterer_list' %}" class="btn btn-gradient mt-3">Reset Search</a>
+                    <p class="text-muted" style="max-width: 400px; margin: 0 auto;">We couldn't find any caterers matching your specific filters. Try adjusting your budget or search area to find more options.</p>
+                    <a href="{% url 'caterer_list' %}" class="btn btn-gradient mt-4" style="border-radius: 8px; font-weight: 600; padding: 10px 25px;">Clear Filters</a>
                 </div>
                 {% endfor %}
             </div>
 
             <!-- Pagination -->
             {% if page_obj.has_other_pages %}
-            <nav aria-label="Page navigation" class="mt-4">
+            <nav aria-label="Page navigation" class="mt-4 mb-5">
                 <ul class="pagination justify-content-center">
                     {% if page_obj.has_previous %}
                     <li class="page-item">

@@ -8,10 +8,10 @@
             <h1>Find the Perfect Caterer for Your Event</h1>
             <p class="hero-subtitle">Discover top-rated caterers and book them instantly for your special day.</p>
 
-            <form class="search-container" action="{% url 'home' %}" method="GET">
+            <form class="search-container" action="{% url 'caterer_list' %}" method="GET">
                 <div class="search-field">
                     <label>Area in Indore</label>
-                    <select name="area">
+                    <select name="city">
                         <option value="">Select Area</option>
                         <option value="vijay nagar">Vijay Nagar</option>
                         <option value="palasia">Palasia</option>
@@ -47,95 +47,7 @@
     </div>
 </section>
 
-{% if is_search %}
-<section class="caterer-results container" style="padding: 60px 0 0 0;" id="search-results">
-    <div style="text-align: center; margin-bottom: 40px;">
-        <h2>Search Results for Indore</h2>
-        <p class="text-muted">Showing caterers matching your criteria</p>
-    </div>
-    
-    <div class="row">
-        {% for vendor in caterers %}
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="caterer-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; height: 100%; display: flex; flex-direction: column;">
-                
-                <!-- Cover Image Wrapper -->
-                <div style="height: 160px; position: relative; background: #eee;">
-                    {% if vendor.cover_image %}
-                    <img src="{{ vendor.cover_image.url }}" alt="{{ vendor.business_name }}" style="width: 100%; height: 100%; object-fit: cover;">
-                    {% else %}
-                    <div style="width: 100%; height: 100%; background: linear-gradient(45deg, var(--secondary), var(--primary)); opacity: 0.8;"></div>
-                    {% endif %}
-                    <div style="position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.9); padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #28a745; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                        <i class="fas fa-check-circle"></i> Verified
-                    </div>
-                </div>
 
-                <!-- Card Body -->
-                <div style="padding: 20px; position: relative; flex-grow: 1; display: flex; flex-direction: column;">
-                    <!-- Profile Image -->
-                    <div style="width: 60px; height: 60px; border-radius: 50%; border: 3px solid white; overflow: hidden; position: absolute; top: -30px; left: 20px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                        {% if vendor.profile_image %}
-                        <img src="{{ vendor.profile_image.url }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
-                        {% else %}
-                        <div style="width: 100%; height: 100%; background: var(--bg-light); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--text-muted);">
-                            <i class="fas fa-store"></i>
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <div style="margin-top: 35px;">
-                        <h4 style="font-weight: 700; font-size: 1.25rem; margin-bottom: 5px; color: var(--text-main);">{{ vendor.business_name }}</h4>
-                        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;">
-                            <i class="fas fa-map-marker-alt text-danger"></i> {{ vendor.service_area }}
-                        </p>
-
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div style="background: #f8f9fa; padding: 5px 10px; border-radius: 8px;">
-                                <span style="font-size: 12px; color: var(--text-muted); display: block;">Starting around</span>
-                                <span style="font-weight: 700; color: var(--secondary); font-size: 15px;">₹{{ vendor.starting_price_per_plate }} <small class="text-muted">/plate</small></span>
-                            </div>
-                            <div style="color: #FFD700; font-size: 13px;">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-auto pt-3 border-top">
-                        <a href="{% url 'caterer_detail' vendor.id vendor.business_name|slugify %}" class="btn btn-outline-primary w-100" style="border-radius: 8px; font-weight: 600; border-color: var(--secondary); color: var(--secondary);">View Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-12 text-center py-5">
-            <div style="color: var(--text-muted); font-size: 48px; margin-bottom: 20px;"><i class="fas fa-search"></i></div>
-            <h3>No Caterers Found</h3>
-            <p class="text-muted">Try adjusting your filters (Area, Budget, or Event Type) to find more options.</p>
-            <a href="{% url 'home' %}" class="btn btn-gradient mt-3">Reset Search</a>
-        </div>
-        {% endfor %}
-    </div>
-</section>
-
-<script>
-    // Scroll to results if search was performed
-    document.addEventListener("DOMContentLoaded", function() {
-        if (window.location.search) {
-            document.getElementById("search-results").scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    });
-</script>
-
-<style>
-    .caterer-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important; }
-    .caterer-card .btn-outline-primary:hover { background: var(--secondary); color: white !important; }
-</style>
-{% endif %}
 
 <section class="features container" style="padding: 100px 0;">
     <div style="text-align: center; margin-bottom: 60px;">
