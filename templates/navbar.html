@@ -17,7 +17,7 @@
             <div class="nav-auth-links">
                 {% if user.is_authenticated %}
                 <span class="nav-user-greeting" style="font-weight: 600; color: var(--primary);">Hi, {{                     user.full_name|truncatechars:15 }}</span>
-                {% if user.role == 'Vendor' %}
+                {% if user.role == 'Vendor' or user.role == 'Event Management' %}
                 <a href="{% url 'vendor_dashboard' %}" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a>
                 {% elif user.role == 'Customer' %}
                 <a href="{% url 'customer_dashboard' %}" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>

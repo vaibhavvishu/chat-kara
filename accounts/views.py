@@ -29,7 +29,7 @@ def login_view(request):
                 # Role-based redirect
                 if user.role == 'Admin':
                     return redirect('admin:index')
-                elif user.role == 'Vendor':
+                elif user.role in ['Vendor', 'Event Management']:
                     return redirect('vendor_dashboard')
                 else:
                     return redirect('customer_dashboard')

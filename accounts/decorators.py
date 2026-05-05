@@ -19,7 +19,7 @@ def role_required(allowed_roles):
             messages.error(request, "You do not have permission to access this page.")
             if request.user.role == 'Customer':
                 return redirect('customer_dashboard')
-            elif request.user.role == 'Vendor':
+            elif request.user.role in ['Vendor', 'Event Management']:
                 return redirect('vendor_dashboard')
             else:
                 return redirect('home')

@@ -35,13 +35,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         ('Customer', 'Customer'),
         ('Vendor', 'Vendor'),
+        ('Event Management', 'Event Management'),
         ('Admin', 'Admin'),
     )
 
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     full_name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=15, unique=True)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='Customer')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Customer')
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     

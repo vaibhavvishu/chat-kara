@@ -9,7 +9,7 @@ def is_customer(user):
     return user.is_authenticated and user.role == 'Customer'
 
 def is_vendor(user):
-    return user.is_authenticated and user.role == 'Vendor'
+    return user.is_authenticated and user.role in ['Vendor', 'Event Management']
 
 @login_required
 @user_passes_test(is_customer, login_url='home')

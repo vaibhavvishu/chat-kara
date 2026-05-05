@@ -9,7 +9,7 @@ from booking.models import Booking
 from booking.payment_models import Payment
 
 @login_required
-@role_required(allowed_roles=['Vendor'])
+@role_required(allowed_roles=['Vendor', 'Event Management'])
 def dashboard(request):
     try:
         profile = request.user.vendor_profile
@@ -52,7 +52,7 @@ def dashboard(request):
     return render(request, 'vendor/dashboard.html', context)
 
 @login_required
-@role_required(allowed_roles=['Vendor'])
+@role_required(allowed_roles=['Vendor', 'Event Management'])
 def vendor_profile(request):
     try:
         profile = request.user.vendor_profile
@@ -77,7 +77,7 @@ def vendor_profile(request):
     return render(request, 'vendor/profile.html', context)
 
 @login_required
-@role_required(allowed_roles=['Vendor'])
+@role_required(allowed_roles=['Vendor', 'Event Management'])
 def manage_menu(request):
     try:
         profile = request.user.vendor_profile
@@ -99,7 +99,7 @@ def manage_menu(request):
     return render(request, 'vendor/menu_management.html', context)
 
 @login_required
-@role_required(allowed_roles=['Vendor'])
+@role_required(allowed_roles=['Vendor', 'Event Management'])
 def add_category(request):
     if request.method == 'POST':
         form = MenuCategoryForm(request.POST)
@@ -113,7 +113,7 @@ def add_category(request):
     return redirect('manage_menu')
 
 @login_required
-@role_required(allowed_roles=['Vendor'])
+@role_required(allowed_roles=['Vendor', 'Event Management'])
 def add_item(request):
     if request.method == 'POST':
         profile = request.user.vendor_profile
@@ -128,7 +128,7 @@ def add_item(request):
     return redirect('manage_menu')
 
 @login_required
-@role_required(allowed_roles=['Vendor'])
+@role_required(allowed_roles=['Vendor', 'Event Management'])
 def delete_item(request, item_id):
     item = get_object_or_404(MenuItem, id=item_id, vendor=request.user.vendor_profile)
     item.delete()
@@ -136,7 +136,7 @@ def delete_item(request, item_id):
     return redirect('manage_menu')
 
 @login_required
-@role_required(allowed_roles=['Vendor'])
+@role_required(allowed_roles=['Vendor', 'Event Management'])
 def toggle_item_availability(request, item_id):
     item = get_object_or_404(MenuItem, id=item_id, vendor=request.user.vendor_profile)
     item.is_available = not item.is_available
