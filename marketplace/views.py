@@ -41,6 +41,12 @@ def caterer_list(request):
             Q(categories__name__icontains=event_type)
         ).distinct()
 
+    vendor_type = request.GET.get('vendor_type')
+    if vendor_type == 'direct_caterer':
+        vendors = vendors.filter(user__role='Vendor')
+    elif vendor_type == 'event_management':
+        vendors = vendors.filter(user__role='Event Management')
+
     # Sorting
     sort_by = request.GET.get('sort')
     if sort_by == 'price_asc':
